@@ -1,0 +1,23 @@
+@(userLoginForm: Form[models.UserLoginData])(implicit request: RequestHeader,flash: Flash)
+@import helper._
+@main("Login Form") {
+<div>@flash.get("success").getOrElse("")</div>
+<div>@flash.get("failure").getOrElse("")</div><br>
+<div>@flash.get("isEnable").getOrElse("")</div>
+<form action="@routes.LoginController.loginCheck()" method="post">
+    @CSRF.formField
+    <div class="form-group col-md-6">
+        <label for="username">Username:</label>
+        <input type="text" class="form-control" name="username" id="username">
+        @userLoginForm("username").error.map{error => @error.message}
+    </div><br>
+    <div class="form-group col-md-6">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" name="password" id="password">
+        @userLoginForm("password").error.map{error => @error.message}
+    </div><br>
+    <button type="submit" class="btn btn-default">Login</button><br><br>
+    <div >@flash.get("invalid").getOrElse("")</div><br>
+    <a href="@routes.LoginController.forgetPassword()">Forget Password ?</a>
+</form>
+}

@@ -1,0 +1,51 @@
+@(user: Form[models.UserProfile])(implicit flash: Flash,request: RequestHeader)
+@import helper._
+@main("Update Data") {
+@if(user.hasGlobalErrors) {
+<p>
+    @user.globalError.map{ error => @error.message}
+</p>
+}
+<form action="@routes.HomeController.updateUserData()" method="POST">
+    @CSRF.formField
+    <div class="form-group col-md-6">
+         First Name :
+        <input type="text" class="form-control"  name="firstName">
+        @user("firstName").error.map{error => @error.message}
+    </div>
+    <div class="form-group col-md-6">
+        Middle Name :
+        <input type="text" class="form-control" name="middleName">
+        @user("middleName").error.map{error => @error.message}
+    </div>
+    <div class="form-group col-md-6">
+        Last Name :
+        <input type="text" class="form-control"  name="lastName">
+        @user("lastName").error.map{error => @error.message}
+    </div>
+    <div class="form-group col-md-6">
+        Mobile Number :
+        <input type="text" minlength="10" maxlength="10" class="form-control" name="mobile">
+        @user("mobile").error.map{error => @error.message}
+    </div>
+    <div class="form-group col-md-6">
+        Gender :
+        <input type="radio" name="gender" checked="checked" value="male"> Male
+        <input type="radio" name="gender"   value="female"> Female<br>
+        @user("gender").error.map{error => @error.message}
+    </div>
+    <div class="form-group col-md-6">
+        Age :
+        <input type="number" min="18" class="form-control" max="75" name="age" required>
+        @user("age").error.map{error => @error.message}
+    </div>
+    <div class="form-group col-md-6">
+        your interest :
+         <input type="radio" name="hobbies"  value="coding">coding
+         <input type="radio" name="hobbies" checked="checked" value="music"> music <br>
+        @user("hobbies").error.map{error => @error.message}
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+    <button><a href="@routes.HomeController.profile()">Cancel</a> </button>
+</form>
+}

@@ -1,0 +1,31 @@
+@(listOfAssignments: List[services.Assignment])(implicit flash: Flash)
+@main("Assignments list"){
+<div>
+
+</div>
+<br>
+<br>
+<div class="container">
+    <h2>List of Assignments</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(assignment <- listOfAssignments){
+        <tr>
+            <td>@assignment.title</td>
+            <td>@assignment.description</td>
+            <td><a href="@routes.AdminController.deleteAssignment(assignment.id)">Delete</a></td>
+            <td><a href="#">Update</a></td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
+</div>
+}
