@@ -1,6 +1,9 @@
 @(userAssignmentForm: Form[models.AssignmentData])(implicit messages:MessagesProvider,request: RequestHeader,flash: Flash)
 @import helper._
 @main("Add assignment") {
+<div>
+    @adminProfile()
+</div>
 <form action="@routes.AdminController.createAssignment()" method="post">
     @CSRF.formField
     <div class="form-group">

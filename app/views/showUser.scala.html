@@ -1,5 +1,9 @@
-@(listOfUser: List[services.UserData])
-@main("User list"){
+@(listOfUser: List[services.UserData])(implicit messages:MessagesProvider,request: RequestHeader,flash:Flash)
+@main("User"){
+<div>
+    @adminProfile()
+</div>
+<br>
 <div class="container">
     <div class="text-center">
         <h2>List of Users</h2>
@@ -20,12 +24,12 @@
                 <td>@user.username</td>
                 @if(user.isActive){
                 <td>
-                    <a type="button disabled" href="@routes.AdminController.enableOrDisableUser(user.username,false)">Disable</a>
+                    <a type="button" href="@routes.AdminController.enableOrDisableUser(user.username,false)" title="click here for Disable">Enable</a>
                 </td>
 
                 }else{
                 <td>
-                    <a type="button" href="@routes.AdminController.enableOrDisableUser(user.username,true)">Enable</a>
+                    <a type="button" href="@routes.AdminController.enableOrDisableUser(user.username,true)" title="click here for Enable">Disable</a>
                 </td>
                 }
             </tr>

@@ -1,6 +1,11 @@
 @(user: Form[models.UserStoreData])(implicit request:RequestHeader)
 @import helper._
 @main("Registration Form") {
+@if(user.hasGlobalErrors) {
+<p>
+    @user.globalError.map{ error => @error.message}
+</p>
+}
 <form action="@routes.HomeController.storeUserData()" method="POST">
     @CSRF.formField
     <div class="form-group col-md-6">

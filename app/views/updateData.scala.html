@@ -1,4 +1,4 @@
-@(user: Form[models.UserProfile])(implicit flash: Flash,request: RequestHeader)
+@(user: Form[models.UserProfile])(implicit request: RequestHeader,flash:Flash)
 @import helper._
 @main("Update Data") {
 @if(user.hasGlobalErrors) {
@@ -6,6 +6,10 @@
     @user.globalError.map{ error => @error.message}
 </p>
 }
+<div>
+    @userProfile()
+</div>
+<br>
 <form action="@routes.HomeController.updateUserData()" method="POST">
     @CSRF.formField
     <div class="form-group col-md-6">
@@ -30,7 +34,7 @@
     </div>
     <div class="form-group col-md-6">
         Gender :
-        <input type="radio" name="gender" checked="checked" value="male"> Male
+        <input type="radio" name="gender"  value="male"> Male
         <input type="radio" name="gender"   value="female"> Female<br>
         @user("gender").error.map{error => @error.message}
     </div>
@@ -42,7 +46,7 @@
     <div class="form-group col-md-6">
         your interest :
          <input type="radio" name="hobbies"  value="coding">coding
-         <input type="radio" name="hobbies" checked="checked" value="music"> music <br>
+         <input type="radio" name="hobbies"  value="music"> music <br>
         @user("hobbies").error.map{error => @error.message}
     </div>
     <button type="submit" class="btn btn-default">Submit</button>

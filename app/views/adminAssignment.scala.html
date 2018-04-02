@@ -1,7 +1,7 @@
-@(listOfAssignments: List[services.Assignment])(implicit flash: Flash)
+@(listOfAssignments: List[services.Assignment])(implicit messages:MessagesProvider,request: RequestHeader,flash:Flash)
 @main("Assignments list"){
 <div>
-
+    @adminProfile()
 </div>
 <br>
 <br>
