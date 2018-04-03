@@ -11,17 +11,17 @@
     <div class="form-group col-md-6">
         <label>First Name :</label>
         <input type="text" class="form-control" name="firstName">
-        @user("firstName").error.map{error => @error.message}
+        <p class=".text-danger">@user("firstName").error.map{error => @error.message}</p>
     </div>
     <div class="form-group col-md-6">
         <label>Middle Name :</label>
         <input type="text" class="form-control" name="middleName">
-        @user("middleName").error.map{error => @error.message}
+        <p class=".text-danger">@user("middleName").error.map{error => @error.message}</p>
     </div>
     <div class="form-group col-md-6">
         <label>Last Name :</label>
         <input type="text" class="form-control" name="lastName">
-        @user("lastName").error.map{error => @error.message}
+        <p class=".text-danger"> @user("lastName").error.map{error => @error.message}</p>
     </div>
     <div class="form-group col-md-6">
         <label> Username :</label>
@@ -40,7 +40,7 @@
     </div>
     <div class="form-group col-md-6">
         <label>Mobile Number :</label>
-        <input type="number" class="form-control" name="mobile" required>
+        <input type="number" class="form-control" name="mobile">
         @user("mobile").error.map{error => @error.message}
     </div>
     <div class="form-group col-md-6">
@@ -51,7 +51,7 @@
     </div>
     <div class="form-group col-md-6">
         <label> Age :</label>
-        <input type="number" min="18" max="75" class="form-control" name="age" required>
+        <input type="number" name="age" class="form-control" min="18" max="75" required>
         @user("age").error.map{error => @error.message}
     </div>
     <div class="form-group col-md-6">

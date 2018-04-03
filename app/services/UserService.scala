@@ -74,7 +74,7 @@ trait UserRepositoryTable extends HasDatabaseConfigProvider[JdbcProfile] {
 
   val userQuery: TableQuery[UserTable] = TableQuery[UserTable]
 
-  class UserTable(tag: Tag) extends Table[UserData](tag, "user") {
+  class UserTable(tag: Tag) extends Table[UserData](tag, "users") {
 
     def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
@@ -100,7 +100,9 @@ trait UserRepositoryTable extends HasDatabaseConfigProvider[JdbcProfile] {
 
     def isAdmin: Rep[Boolean] = column[Boolean]("isAdmin")
 
-    def * : ProvenShape[UserData] = (id, firstName, middleName, lastName, username, password, mobile, gender, age, hobbies, isActive, isAdmin) <> (UserData.tupled, UserData.unapply)
+    // scalastyle:off
+    def * : ProvenShape[UserData] = (id, firstName, middleName, lastName, username, password
+        , mobile, gender, age, hobbies, isActive, isAdmin) <> (UserData.tupled, UserData.unapply)
   }
 
 }

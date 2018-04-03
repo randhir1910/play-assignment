@@ -11,31 +11,33 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class HomeController @Inject()( assignmentService: AssignmentService,userForm: UserForm, userService: UserService, cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(assignmentService: AssignmentService
+                               , userForm: UserForm, userService: UserService
+                               , cc: ControllerComponents) extends AbstractController(cc) {
 
-  def index() = Action { implicit request: Request[AnyContent] =>
+  def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
   }
 
-  def login() = Action { implicit request: Request[AnyContent] =>
+  def login(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.login(userForm.loginForm))
   }
 
-  def register() = Action { implicit request: Request[AnyContent] =>
+  def register(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.signUp(userForm.registrationForm))
   }
 
-  def logout() = Action { implicit request: Request[AnyContent] =>
+  def logout(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok("Bye").withNewSession
     Ok(views.html.login(userForm.loginForm))
   }
 
 
-  def profile() = Action { implicit request: Request[AnyContent] =>
+  def profile(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.userProfile())
   }
 
-  def viewAssignment() = Action.async {
+  def viewAssignment(): Action[AnyContent] = Action.async {
     implicit request =>
       assignmentService.readAssignment.map {
         assignmentsList => Ok(views.html.userAssignment(assignmentsList))
@@ -63,7 +65,7 @@ class HomeController @Inject()( assignmentService: AssignmentService,userForm: U
               }
 
             } {
-              _ =>Future.successful(Redirect(routes.HomeController.login()).flashing("success"->"user already exist"))
+              _ => Future.successful(Redirect(routes.HomeController.login()).flashing("success" -> "user already exist"))
 
             }
         }
@@ -84,14 +86,14 @@ class HomeController @Inject()( assignmentService: AssignmentService,userForm: U
   }
 
   def updateUserData(): Action[AnyContent] = Action.async { implicit request =>
-    val userName = request.session.get("username").get
+    val userName = request.session.get("username").getOrElse("")
     userForm.profileForm.bindFromRequest().fold(
       formWithError => {
         Future.successful(BadRequest(views.html.updateData(formWithError)))
       },
       data => {
-        val record = UserProfile(data.firstName, data.middleName, data.lastName, data.mobile,
-          data.gender, data.age, data.hobbies)
+        val record = UserProfile(data.firstName, data.middleName, data.lastName, data.mobile
+          , data.gender, data.age, data.hobbies)
         val result = userService.updateProfile(userName, record)
         result.map {
           case true => Redirect(routes.HomeController.profile())
@@ -102,6 +104,4 @@ class HomeController @Inject()( assignmentService: AssignmentService,userForm: U
       }
     )
   }
-
-
 }

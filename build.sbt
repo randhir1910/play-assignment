@@ -17,7 +17,6 @@ libraryDependencies ++= Seq(guice,
   "com.typesafe.play" % "play-slick_2.12" % "3.0.0",
   "com.typesafe.play" % "play-slick-evolutions_2.12" % "3.0.0",
   "mysql" % "mysql-connector-java" % "6.0.6",
-  "com.h2database" % "h2" % "1.4.196",
-  "org.mindrot" % "jbcrypt" % "0.4",
-  "org.mockito" % "mockito-core" % "2.8.47" % "test"
+  "com.h2database" % "h2" % "1.4.196" % Test,
+  "org.mindrot" % "jbcrypt" % "0.4"
 )

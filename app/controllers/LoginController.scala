@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import models.UserForm
 import play.api.i18n.I18nSupport
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.{UserData, UserService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -16,18 +16,18 @@ class LoginController @Inject()(cc: ControllerComponents,
                                 userForms: UserForm)
     extends AbstractController(cc) with I18nSupport {
 
-  def loginForm() = Action {
+  def loginForm(): Action[AnyContent] = Action {
     implicit request =>
       Ok(views.html.login(userForms.loginForm))
   }
 
-  def forgetPassword() = Action {
+  def forgetPassword(): Action[AnyContent] = Action {
 
     implicit request =>
       Ok(views.html.forgetPassword(userForms.forgetPasswordForm))
   }
 
-  def changePassword() = Action.async {
+  def changePassword(): Action[AnyContent] = Action.async {
     implicit request =>
       userForms.forgetPasswordForm.bindFromRequest().fold(
         formWithError => {
@@ -45,7 +45,7 @@ class LoginController @Inject()(cc: ControllerComponents,
         })
   }
 
-  def loginCheck() = Action.async { implicit request =>
+  def loginCheck(): Action[AnyContent] = Action.async { implicit request =>
     userForms.loginForm.bindFromRequest().fold(
       formWithErrors => {
         Future.successful(BadRequest(views.html.login(formWithErrors)))
@@ -66,7 +66,7 @@ class LoginController @Inject()(cc: ControllerComponents,
                 Redirect(routes.HomeController.profile()).withSession("username" -> user.username)
               }
               else {
-               Redirect(routes.HomeController.login()).flashing("isEnable"->"User Disabled")
+                Redirect(routes.HomeController.login()).flashing("isEnable" -> "User Disabled")
               }
             }
           }
@@ -77,4 +77,5 @@ class LoginController @Inject()(cc: ControllerComponents,
     )
   }
 }
+
 

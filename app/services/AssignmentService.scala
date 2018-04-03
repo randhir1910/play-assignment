@@ -51,6 +51,7 @@ trait AssignmentRepositoryTable extends HasDatabaseConfigProvider[JdbcProfile] {
 
     def description: Rep[String] = column[String]("description")
 
+    // scalastyle:off
     def * : ProvenShape[Assignment] = (id, title, description) <> (Assignment.tupled, Assignment.unapply)
   }
 
