@@ -1,47 +1,94 @@
-/*
 package controllers
 
-import org.scalatestplus.play._
-import org.scalatestplus.play.guice._
-import play.api.test._
+import models.{UserForm, UserStoreData}
+import org.mockito.Mockito.when
+import org.scalatestplus.play.PlaySpec
+import org.specs2.mock.Mockito
+import play.api.mvc.ControllerComponents
+import play.api.test.CSRFTokenHelper._
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.{AssignmentService, UserData, UserService}
 
-/**
- * Add your spec here.
- * You can mock out a whole application including requests, plugins etc.
- *
- * For more information, see https://www.playframework.com/documentation/latest/ScalaTestingWithScalaTest
- */
-class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+import scala.concurrent.Future
 
-  "HomeController GET" should {
+class HomeControllerSpec extends PlaySpec with Mockito {
 
-//    "render the index page from a new instance of controller" in {
-//      val controller = new HomeController(stubControllerComponents())
-//      val home = controller.index().apply(FakeRequest(GET, "/"))
-//
-//      status(home) mustBe OK
-//      contentType(home) mustBe Some("text/html")
-//      contentAsString(home) must include ("Welcome to Play")
-//    }
+  val controller = getMockedObject
 
-    "render the index page from the application" in {
-      val controller = inject[HomeController]
-      val home = controller.index().apply(FakeRequest(GET, "/"))
+  "Home controller" should {
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("Welcome to Play")
+    "bad request" in {
+
+      val user = UserStoreData("randhir", Some("kk"), "kumar", "randhir", "123456", "123456", "9953188803", "male", 23, "cricket")
+      val userForm = new UserForm {}.registrationForm.fill(user)
+      when(controller.userForm.registrationForm) thenReturn userForm
+      val userData = UserData(1, "randhir", Some("kk"), "kumar", "randhir", "123456", "9953188803", "male", 23, "cricket", true, false)
+      when(controller.userService.addUser(userData)) thenReturn Future.successful(true)
+
+      val request = FakeRequest(POST, "/storeUserData").withFormUrlEncodedBody("csrfToken"
+          -> "9c48f081724087b31fcf6099b7eaf6a276834cd9-1487743474314-cda043ddc3d791dc500e66ea",
+        "fisrtName" -> "randhir",
+        "middleName" -> "kk",
+        "lastName" -> "kumar",
+        "username" -> "randhir",
+        "password" -> "12345",
+        "mobile" -> "9953188803",
+        "gender" -> "male",
+        "age" -> "30",
+        "hobbies" -> "cricket"
+      )
+          .withCSRFToken
+
+      val result = controller.homeController.storeUserData()(request)
+      status(result) mustBe 400
     }
 
-    "render the index page from the router" in {
-      val request = FakeRequest(GET, "/")
-      val home = route(app, request).get
+    "add user into database" in {
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("Welcome to Play")
+      val userInformation = UserData(1, "randhir", Some("kk"), "kumar", "randhir", "123456", "9953188803", "male", 23, "cricket", true, false)
+
+      when(controller.userService.fetchByUsername("randhir")) thenReturn Future.successful(Option(userInformation))
+
+      when(controller.userService.addUser(userInformation)) thenReturn Future.successful(true)
+
+      val request = FakeRequest(POST, "/storeUserData").withFormUrlEncodedBody("csrfToken"
+          -> "9c48f081724087b31fcf6099b7eaf6a276834cd9-1487743474314-cda043ddc3d791dc500e66ea",
+        "firstName" -> "randhir",
+        "middleName" -> "kk",
+        "lastName" -> "kumar",
+        "username" -> "randhir",
+        "password" -> "12345",
+        "rePassword" -> "12345",
+        "mobile" -> "9953188803",
+        "gender" -> "male",
+        "age" -> "23",
+        "hobbies" -> "coding")
+          .withCSRFToken
+
+      val result = controller.homeController.storeUserData().apply(request)
+      status(result) mustBe 303
     }
+
   }
+
+  def getMockedObject: TestObjects = {
+    val assignmentService = mock[AssignmentService]
+    val userForm = mock[UserForm]
+    val userService = mock[UserService]
+
+    val controller = new HomeController(assignmentService, userForm, userService, stubControllerComponents())
+
+    TestObjects(assignmentService, userForm, userService, stubControllerComponents(), controller)
+  }
+
+  case class TestObjects(assignmentService: AssignmentService,
+                         userForm: UserForm,
+                         userService: UserService,
+                         controllerComponent: ControllerComponents,
+                         homeController: HomeController
+                        )
+
+
 }
-*/
+

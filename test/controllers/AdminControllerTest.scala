@@ -8,7 +8,7 @@ import play.api.mvc.ControllerComponents
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{Assignment, AssignmentService, UserService}
+import services.{Assignment, AssignmentService, UserData, UserService}
 
 import scala.concurrent.Future
 
@@ -37,7 +37,8 @@ class AdminControllerTest extends PlaySpec with Mockito {
       status(result) mustBe SEE_OTHER
     }
 
-    "bad request if assignment form fill blank" in {
+
+    "bad request if assignment form is blank" in {
 
       val request = FakeRequest(POST, "/addAssignment").withFormUrlEncodedBody("csrfToken"
           -> "cda043ddc3d791dc500e66ea", "title" -> "", "description" -> "")
@@ -63,6 +64,42 @@ class AdminControllerTest extends PlaySpec with Mockito {
       val result = controller.adminController.deleteAssignment(3).apply(request)
       status(result) mustBe 500
     }
+
+    "read assignment" in {
+      val formData = List(Assignment(1, "c++ program", "max subarray value"))
+      when(controller.assignmentService.readAssignment) thenReturn Future.successful(formData)
+      val request = FakeRequest(GET, "readAssignment")
+      val result = controller.adminController.readAssignment().apply(request)
+      status(result) mustBe 200
+    }
+
+    "show user list" in {
+      val userList = List(UserData(1, "randhir", Some("kk"), "kumar", "randhir", "12345", "9953188803"
+        , "male", 23, "cricket", false, true))
+      when(controller.userService.getAllUser) thenReturn Future.successful(userList)
+      val request = FakeRequest(GET, "showUser")
+      val result = controller.adminController.showUser().apply(request)
+      status(result) mustBe 200
+    }
+
+    "admin profile test cases" in {
+
+      val request = FakeRequest(GET, "/adminProfile")
+      val result = controller.adminController.profile().apply(request)
+      status(result) mustBe 200
+    }
+
+    "enable/disable user " in {
+
+      when(controller.userService.enableDisableUser("randhir", false)) thenReturn Future.successful(true)
+
+      val request = FakeRequest(GET, "/permission")
+
+      val result = controller.adminController.enableOrDisableUser("randhir", false).apply(request)
+      status(result) mustBe SEE_OTHER
+
+    }
+
 
   }
 

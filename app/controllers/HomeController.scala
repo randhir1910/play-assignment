@@ -58,7 +58,7 @@ class HomeController @Inject()(assignmentService: AssignmentService
               val result = userService.addUser(record)
               result.map {
                 case true => Redirect(routes.HomeController.profile())
-                    .withSession("name" -> data.firstName)
+                    .withSession("name" -> data.firstName, "username" -> data.username)
                     .flashing("success" -> s"welcome ${data.firstName} ${data.lastName}")
                 case false => Logger.info("internal error")
                   Redirect(routes.HomeController.index())

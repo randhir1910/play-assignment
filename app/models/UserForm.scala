@@ -3,9 +3,27 @@ package models
 import constant.Const
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+
+import scala.util.matching.Regex
 
 
 class UserForm {
+
+  val allNumbers: Regex = """\d*""".r
+  val allLetters: Regex = """[A-Za-z]*""".r
+
+  val mobileNumberCheckConstraint: Constraint[String] = Constraint("constraints.checkMobileNumber")({
+    mobileNo =>
+      if (mobileNo.length == 10) {
+        mobileNo match {
+          case allNumbers() => Valid
+        }
+      }
+      else {
+        Invalid(Seq(ValidationError("please enter valid mobile number")))
+      }
+  })
 
   val registrationForm: Form[UserStoreData] = Form(mapping(
     "firstName" -> text.verifying("please enter your first name", firstName => firstName.nonEmpty),
@@ -14,7 +32,7 @@ class UserForm {
     "username" -> text.verifying("please enter your username", username => username.nonEmpty),
     "password" -> text.verifying("please enter your password", password => password.nonEmpty),
     "rePassword" -> text.verifying("please re enter password ", rePassword => rePassword.nonEmpty),
-    "mobile" -> text.verifying("please enter your valid mobile number", mobile => mobile.toInt > Const.ZERO),
+    "mobile" -> nonEmptyText.verifying(mobileNumberCheckConstraint),
     "gender" -> text.verifying("please select your gender ", gender => gender.nonEmpty),
     "age" -> number(min = Const.eightTeen, max = Const.seventyFive),
     "hobbies" -> text.verifying("please select your hobby ", hobbies => hobbies.nonEmpty)
@@ -31,7 +49,7 @@ class UserForm {
     "firstName" -> text.verifying("please enter your first name", _.nonEmpty),
     "middleName" -> optional(text),
     "lastName" -> text.verifying("please enter your Last name", _.nonEmpty),
-    "mobile" -> text.verifying("please enter your valid mobile number", _.toString.length == Const.TEN),
+    "mobile" -> nonEmptyText.verifying(mobileNumberCheckConstraint),
     "gender" -> text.verifying("please select your gender ", _.nonEmpty),
     "age" -> number(min = Const.eightTeen, max = Const.seventyFive),
     "hobbies" -> text.verifying("please select your hobby ", _.nonEmpty)

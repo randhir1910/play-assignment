@@ -13,8 +13,8 @@
 <form action="@routes.HomeController.updateUserData()" method="POST">
     @CSRF.formField
     <div class="form-group col-md-6">
-         First Name :
-        <input type="text" class="form-control"  name="firstName">
+        First Name :
+        <input type="text" class="form-control" name="firstName">
         @user("firstName").error.map{error => @error.message}
     </div>
     <div class="form-group col-md-6">
@@ -24,7 +24,7 @@
     </div>
     <div class="form-group col-md-6">
         Last Name :
-        <input type="text" class="form-control"  name="lastName">
+        <input type="text" class="form-control" name="lastName">
         @user("lastName").error.map{error => @error.message}
     </div>
     <div class="form-group col-md-6">
@@ -34,8 +34,8 @@
     </div>
     <div class="form-group col-md-6">
         Gender :
-        <input type="radio" name="gender"  value="male"> Male
-        <input type="radio" name="gender"   value="female"> Female<br>
+        <input type="radio" name="gender" value="male"> Male
+        <input type="radio" name="gender" value="female"> Female<br>
         @user("gender").error.map{error => @error.message}
     </div>
     <div class="form-group col-md-6">
@@ -45,11 +45,11 @@
     </div>
     <div class="form-group col-md-6">
         your interest :
-         <input type="radio" name="hobbies"  value="coding">coding
-         <input type="radio" name="hobbies"  value="music"> music <br>
+        <input type="radio" name="hobbies" value="coding">coding
+        <input type="radio" name="hobbies" value="music"> music <br>
         @user("hobbies").error.map{error => @error.message}
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
-    <button><a href="@routes.HomeController.profile()">Cancel</a> </button>
+    <button><a href="@routes.HomeController.profile()">Cancel</a></button>
 </form>
 }
